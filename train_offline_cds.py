@@ -4,8 +4,9 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 
 import os
 import random
-os.environ['MKL_SERVICE_FORCE_INTEL'] = '1'
-os.environ['MUJOCO_GL'] = 'egl'
+# os.environ['MKL_SERVICE_FORCE_INTEL'] = '1'
+# os.environ['MUJOCO_GL'] = 'egl'
+# os.environ['DISPLAY']="0"
 import json
 from pathlib import Path
 import hydra
@@ -16,7 +17,7 @@ import dmc
 import utils
 from logger import Logger
 from replay_buffer import make_replay_loader
-from video import VideoRecorder
+#from video import VideoRecorder
 import wandb
 
 torch.backends.cudnn.benchmark = True

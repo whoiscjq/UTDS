@@ -5,7 +5,7 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 import os
 import random
 os.environ['MKL_SERVICE_FORCE_INTEL'] = '1'
-os.environ['MUJOCO_GL'] = 'egl'
+# os.environ['MUJOCO_GL'] = 'egl'
 import json
 from pathlib import Path
 import hydra
@@ -16,7 +16,7 @@ import dmc
 import utils
 from logger import Logger
 from replay_buffer import make_replay_loader
-from video import VideoRecorder
+# from video import VideoRecorder
 import wandb
 
 torch.backends.cudnn.benchmark = True
@@ -35,22 +35,22 @@ def get_data_seed(seed, num_data_seeds):
 	return (seed - 1) % num_data_seeds + 1
 
 
-def eval(global_step, agent, env, logger, num_eval_episodes, video_recorder):
+def eval(global_step, agent, env, logger, num_eval_episodes, video_recorder=None):
 	step, episode, total_reward = 0, 0, 0
 	eval_until_episode = utils.Until(num_eval_episodes)
 	while eval_until_episode(episode):
 		time_step = env.reset()
-		video_recorder.init(env, enabled=(episode == 0))
+		# video_recorder.init(env, enabled=(episode == 0))
 		while not time_step.last():
 			with torch.no_grad(), utils.eval_mode(agent):
 				action = agent.act(time_step.observation, step=global_step, eval_mode=True)
 			time_step = env.step(action)
-			video_recorder.record(env)
+			# video_recorder.record(env)
 			total_reward += time_step.reward
 			step += 1
 
 		episode += 1
-		video_recorder.save(f'{global_step}.mp4')
+		# video_recorder.save(f'{global_step}.mp4')
 
 	with logger.log_and_dump_ctx(global_step, ty='eval') as log:
 		log('episode_reward', total_reward / episode)
@@ -102,8 +102,8 @@ def main(cfg):
 	# 	break
 
 	# create video recorders
-	video_recorder = VideoRecorder(work_dir if cfg.save_video else None)
-
+	#video_recorder = VideoRecorder(work_dir if cfg.save_video else None)
+	video_recorder=None
 	timer = utils.Timer()
 	global_step = 0
 
